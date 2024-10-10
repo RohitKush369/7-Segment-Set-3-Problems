@@ -1,0 +1,54 @@
+void setup() {
+    volatile char *dirf, *dirk;
+    dirf = (volatile char *)0x30;
+    *dirf = 0xFF; 
+    dirk = (volatile char *)0x107;
+    *dirk = 0xFF; 
+}
+void loop() {
+    volatile char *outf, *outk;
+    volatile long i;
+    outf = (volatile char *)0x31;
+    outk = (volatile char *)0x108;
+
+    int prime_numbers[] = {11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97};
+    int num_primes = sizeof(prime_numbers) / sizeof(prime_numbers[0]);
+
+    while (1) {
+        for (int idx = 0; idx < num_primes; idx++) {
+            int number = prime_numbers[idx];
+            int tens = number / 10;
+            int ones = number % 10;
+
+            display_digit(outf, tens);
+            display_digit(outk, ones);
+            for (i = 0; i < 100000; i++);
+        }
+    }
+}
+void display_digit(volatile char *port, int digit) {
+    switch (digit) {
+        case 0: *port = 0x3F; 
+        break; 
+        case 1: *port = 0x06;
+         break;
+        case 2: *port = 0x5B; 
+        break; 
+        case 3: *port = 0x4F;
+         break; 
+        case 4: *port = 0x66;
+         break;
+        case 5: *port = 0x6D;
+         break; 
+        case 6: *port = 0x7D;
+         break; 
+        case 7: *port = 0x07;
+         break; 
+        case 8: *port = 0x7F; 
+        break; 
+        case 9: *port = 0x6F; 
+        break; 
+        default: *port = 0x00; 
+        break; 
+    }
+}
