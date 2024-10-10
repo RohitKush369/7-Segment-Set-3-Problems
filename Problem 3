@@ -1,0 +1,72 @@
+//Display 99 to 00 in loop with delay
+void setup() {
+volatile char *dirf,*dirk;
+dirf=0x30;
+*dirf=0xFF;
+dirk=0x107;
+*dirk=0xFF;
+}
+void loop() {
+  volatile char *outf,*outk;
+  volatile long i;
+  outf=0x31;
+  *outf=0xFF;
+  outk=0x108;
+  *outk=0xFF;
+  while(1){
+   for(int num=99;num>=0;num--){
+    int ones=num%10;
+    int tens=num/10;
+    display_digit(outf,tens);
+    display_digit(outk,ones);
+    for(i=0;i<100000;i++);
+   }
+  }
+}
+void display_digit(volatile char *port,int digit){
+  switch(digit){
+    case 0:
+    *port=0x3F;
+    break;
+     case 1:
+    *port=0x06;
+    break;
+     case 2:
+    *port=0x5B;
+    break;
+    case 3:
+    *port=0x4F;
+    break;
+    case 4:
+    *port=0x66;
+    break;
+    case 5:
+    *port=0x6D;
+    break;
+    case 6:
+    *port=0x7D;
+    break;
+    case 7:
+    *port=0x07;
+    break;
+    case 8:
+    *port=0x7F;
+    break;
+     case 9:
+    *port=0x6F;
+    break;
+    default:
+    *port=0x00;
+    break;
+  }
+}
+
+     
+     
+     
+     
+     
+     
+     
+  
+
