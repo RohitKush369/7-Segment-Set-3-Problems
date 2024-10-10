@@ -1,0 +1,62 @@
+//Display 0.000 to 999.9 in loop with delay
+void setup() {
+  volatile char *dirf, *dirk,*dira,*dirc;
+  dirf = (volatile char *)0x30;
+  *dirf = 0xFF; 
+  dirk = (volatile char *)0x107;
+  *dirk = 0xFF;
+   dira = (volatile char *)0x21;
+  *dira = 0xFF;
+   dirc = (volatile char *)0x27;
+  *dirc = 0xFF;
+
+}
+
+void loop() {
+  volatile char *outf, *outk,*outa,*outc;
+  volatile long i;
+  outf = (volatile char *)0x31;
+  outk = (volatile char *)0x108;
+  outa = (volatile char *)0x22;
+  outc = (volatile char *)0x28;
+  while (1) {
+    for (int num =0; num <10000; num++) {
+      int ones = num % 10;
+      int tens = num /10%10;
+      int hundreds=num/100%10;
+      int thousands=num/1000;
+     display_digit(outf, thousands ,true);
+      display_digit(outk, hundreds,false);
+      display_digit(outa, tens,true);
+      display_digit(outc, ones,false);
+      for (i = 0; i < 100000; i++);
+    }
+  }
+}
+
+void display_digit(volatile char *port, int digit, bool decimal_point ) {
+  switch (digit) {
+    case 0: *port =decimal_point? 0xBF: 0x3F;
+      break;
+    case 1: *port = decimal_point? 0x86: 0x06;
+      break;
+    case 2: *port = decimal_point?  0xDB: 0x5B;
+      break;
+    case 3: *port = decimal_point?  0xCF: 0x4F;
+      break;
+    case 4: *port = decimal_point?  0xE6: 0x66;
+      break;
+    case 5: *port = decimal_point ? 0xED: 0x6D;
+      break;
+    case 6: *port = decimal_point ?  0xFD: 0x7D;
+      break;
+    case 7: *port = decimal_point?  0x87: 0x07;
+      break;
+    case 8: *port = decimal_point? 0xFF: 0x7F;
+      break;
+    case 9: *port = decimal_point?  0xEF :0x6F;
+      break;
+    default: *port = 0x00;
+      break;
+  }
+}
